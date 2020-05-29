@@ -9,25 +9,25 @@
 import UIKit
 
 public class GeometricLoader: UIView {
-    
+
     internal var loaderView = UIView()
     internal var loaderSuperview: UIView?
     internal var isAnimating = false
-    
-    public static func createGeometricLoader() -> Self {
-        
+
+    public static func createGeometricLoader(_ view: UIView? = nil) -> Self {
+
         let loader = self.init()
-        loader.setupView()
-        
+        loader.setupView(view)
+
         return loader
     }
-    
+
     internal func configureLoader() {
         preconditionFailure("This method has to be called from GeometricLoader subclass")
     }
- 
+
     open func startAnimation() {
-        
+
         self.configureLoader()
         isHidden = false
         if superview == nil {
@@ -35,31 +35,36 @@ public class GeometricLoader: UIView {
         }
     }
     open func stopAnimation() {
-        
+
         self.isHidden = false
         self.isAnimating = false
         self.removeFromSuperview()
         self.layer.removeAllAnimations()
-        
+
     }
-    
-    internal func setupView() {
-        
-        guard let window = UIApplication.shared.delegate?.window else { return }
-        guard let mainWindow = window else {return}
-        
-        self.frame = mainWindow.frame
-        self.center = CGPoint(x: mainWindow.bounds.midX, y: mainWindow.bounds.midY)
-        
-        mainWindow.addSubview(self)
-        
-        self.loaderSuperview = mainWindow
+
+    internal func setupView(_ view: UIView? = nil) {
+        if let view = view {
+            setup(on: view)
+        } else if let view = UIApplication.shared.delegate?.window as? UIView {
+            setup(on: view)
+        }
+    }
+
+    // MARK: - Private Methods
+
+    private func setup(on view: UIView) {
+        self.frame = view.frame
+        self.center = CGPoint(x: view.bounds.midX, y: view.bounds.midY)
+
+        view.addSubview(self)
+
+        self.loaderSuperview = view
         self.loaderView.frame = CGRect(x: frame.origin.x, y: frame.origin.y, width: frame.width/2, height: frame.width/2)
         self.loaderView.center = CGPoint(x: frame.width/2, y: frame.height/2)
         self.loaderView.backgroundColor = UIColor.clear
         self.isHidden = true
         self.addSubview(loaderView)
-        
     }
-    
+
 }
