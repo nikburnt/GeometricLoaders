@@ -43,23 +43,28 @@ public class GeometricLoader: UIView {
         
     }
     
-    internal func setupView() {
-        
-        guard let window = UIApplication.shared.delegate?.window else { return }
-        guard let mainWindow = window else {return}
-        
-        self.frame = mainWindow.frame
-        self.center = CGPoint(x: mainWindow.bounds.midX, y: mainWindow.bounds.midY)
-        
-        mainWindow.addSubview(self)
-        
-        self.loaderSuperview = mainWindow
+    internal func setupView(_ view: UIView? = nil) {
+        if let view = view {
+            setup(on: view)
+        } else if let view = UIApplication.shared.delegate?.window as? UIView {
+            setup(on: view)
+        }
+    }
+
+    // MARK: - Private Methods
+
+    private func setup(on view: UIView) {
+        self.frame = view.frame
+        self.center = CGPoint(x: view.bounds.midX, y: view.bounds.midY)
+
+        view.addSubview(self)
+
+        self.loaderSuperview = view
         self.loaderView.frame = CGRect(x: frame.origin.x, y: frame.origin.y, width: frame.width/2, height: frame.width/2)
         self.loaderView.center = CGPoint(x: frame.width/2, y: frame.height/2)
         self.loaderView.backgroundColor = UIColor.clear
         self.isHidden = true
         self.addSubview(loaderView)
-        
     }
-    
+
 }
