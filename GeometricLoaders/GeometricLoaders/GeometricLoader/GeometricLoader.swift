@@ -14,10 +14,10 @@ public class GeometricLoader: UIView {
     internal var loaderSuperview: UIView?
     internal var isAnimating = false
     
-    public static func createGeometricLoader() -> Self {
+    public static func createGeometricLoader(_ view: UIView? = nil) -> Self {
         
         let loader = self.init()
-        loader.setupView()
+        loader.setupView(view)
         
         return loader
     }
